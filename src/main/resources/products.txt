@@ -1,0 +1,10 @@
+PRODUCT,Apple,52,0,0,14
+PRODUCT,Banana,89,1,0,23
+PRODUCT,Egg,155,13,11,1
+VEGETABLE,Tomato,18,1,0,4,fruit
+VEGETABLE,Cucumber,15,1,0,3,green
+VEGETABLE,Broccoli,34,3,0,7,cruciferous
+LEAFY,Spinach,23,3,0,4,leaf,92
+LEAFY,Lettuce,15,1,0,2,leaf,95
+ROOT,Carrot,41,1,0,10,root,20
+ROOT,Beetroot,43,2,0,10,root,15

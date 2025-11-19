@@ -1,4 +1,4 @@
-package org.egorik.view.command;
+package org.egorik.command;
 
 public interface Command {
     void execute();

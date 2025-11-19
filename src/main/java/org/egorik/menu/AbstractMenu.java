@@ -1,7 +1,8 @@
-package org.egorik.view.menu;
+package org.egorik.menu;
 
-import org.egorik.InputManager;
-import org.egorik.view.command.Command;
+import org.egorik.AppContext;
+import org.egorik.command.Command;
+import org.egorik.manager.InputManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +10,10 @@ import java.util.Map;
 public abstract class AbstractMenu implements Command {
 
     private final Map<Integer, Command> commands = new HashMap<>();
+    protected AppContext appContext;
 
-    public AbstractMenu() {
+    public AbstractMenu(AppContext appContext) {
+        this.appContext = appContext;
         init();
     }
 
@@ -36,7 +39,7 @@ public abstract class AbstractMenu implements Command {
             return;
         }
 
-        System.out.printf("===== Menu %s ====%s\n", getName(), withHelp ? String.format("\n%s", getDescription()) : "");
+        System.out.printf("===== %s ====%s\n", getName(), withHelp ? String.format("\n%s", getDescription()) : "");
 
         for (Map.Entry<Integer, Command> a : commands.entrySet()) {
             System.out.printf("%d) %s %s\n",
@@ -46,9 +49,9 @@ public abstract class AbstractMenu implements Command {
             );
         }
 
-        System.out.println("-1) - Exit menu");
-        System.out.println(" 0) - Help");
-        System.out.printf("===== Menu %s ====\n", getName());
+//        System.out.println("0 - Help");
+//        System.out.println("-1 - Exit menu");
+        System.out.printf("===== %s ====\n", getName());
 
     }
 
@@ -74,7 +77,7 @@ public abstract class AbstractMenu implements Command {
 
             System.out.println();
             System.out.print("Enter action id: ");
-            userInput = InputManager.getValidInt();
+            userInput = InputManager.getValidIntInRange(-1, commands.size());
 
             switch (userInput) {
                 case -1 -> {

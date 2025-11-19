@@ -1,9 +1,14 @@
 package org.egorik;
 
-import org.egorik.view.menu.MainMenu;
+import org.egorik.manager.InputManager;
+import org.egorik.menu.MainMenu;
 
 public class Main {
     public static void main(String[] args) {
-        new MainMenu().menuCycle();
+
+        System.out.println("Chef-Salad program");
+        AppContext appContext = new AppContext();
+        new MainMenu(appContext).menuCycle();
+        InputManager.getMyScanner().close();
     }
 }
