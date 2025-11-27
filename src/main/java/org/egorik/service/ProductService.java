@@ -1,5 +1,7 @@
 package org.egorik.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.egorik.model.Product;
 import org.egorik.model.ProductPatch;
 import org.egorik.repository.Repository;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class ProductService {
+    private static final Logger logger = LogManager.getLogger(ProductService.class);
 
     private final Repository<Product> repository;
 
@@ -27,10 +30,12 @@ public class ProductService {
 
     public void addProduct(Product newProduct) {
         if (isProductExists(newProduct)) {
+            logger.warn("Product - {} - exists", newProduct);
             System.out.printf("Product - %s - exists!\n", newProduct);
             return;
         }
         repository.add(newProduct);
+        logger.info("Add new product - {}", newProduct);
     }
 
     public List<Product> getAllProducts() {
@@ -39,10 +44,13 @@ public class ProductService {
 
     public void updateProduct(int ind, ProductPatch patch) {
         patch.updateProduct(repository.getAll().get(ind));
+        logger.info("Update product with id {} - {}", ind, getAllProducts().get(ind));
     }
 
     public void deleteProduct(int ind) {
+        Product toDelete = getAllProducts().get(ind);
         repository.delete(ind);
+        logger.info("Delete product with id {} - {}", ind, toDelete);
     }
 
     private List<Product> filter(Predicate<Product> predicate) {
@@ -66,5 +74,6 @@ public class ProductService {
             productComparator = productComparator.reversed();
         }
         repository.getAll().sort(productComparator);
+        logger.info("Sorted products by calories {}", inAscending ? "ascending" : "descending");
     }
 }

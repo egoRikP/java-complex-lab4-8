@@ -1,12 +1,13 @@
 package org.egorik.command;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.egorik.AppContext;
 import org.egorik.manager.InputManager;
 
-import java.io.FileNotFoundException;
-
 public class FileLoadCommand implements Command {
 
+    private static final Logger logger = LogManager.getLogger(FileLoadCommand.class);
     private final AppContext appContext;
 
     public FileLoadCommand(AppContext appContext) {
@@ -15,68 +16,57 @@ public class FileLoadCommand implements Command {
 
     @Override
     public void execute() {
-        System.out.println("Loading products and salads!");
+        String productPath = appContext.fileManager.DEFAULT_PRODUCTS_PATH;
+        String saladPath = appContext.fileManager.DEFAULT_SALADS_PATH;
+
+        logger.debug("Default path to load products - {}", appContext.fileManager.DEFAULT_PRODUCTS_PATH);
+        logger.debug("Default path to load salads - {}", appContext.fileManager.DEFAULT_SALADS_PATH);
 
         System.out.printf("Default path to load products - %s\n", appContext.fileManager.DEFAULT_PRODUCTS_PATH);
         System.out.printf("Default path to load salads - %s\n", appContext.fileManager.DEFAULT_SALADS_PATH);
 
-        if (InputManager.isContinue("Use default paths?")) {
-            try {
-                appContext.fileManager.loadProducts(appContext.fileManager.DEFAULT_PRODUCTS_PATH).forEach(appContext.productService::addProduct);
-
-                System.out.println("Products loaded!");
-            } catch (FileNotFoundException fileNotFoundException) {
-                System.out.println(fileNotFoundException.getMessage());
-            }
-
-            try {
-                appContext.fileManager.loadSalads(appContext.fileManager.DEFAULT_SALADS_PATH, appContext.productService.getAllProducts()).forEach(appContext.saladService::addSalad);
-
-                System.out.println("Salads loaded!");
-            } catch (FileNotFoundException fileNotFoundException) {
-                System.out.println(fileNotFoundException.getMessage());
-            }
-        } else {
-
+        if (!InputManager.isContinue("Use default paths?")) {
             System.out.print("Enter products path: ");
-            String productPath = InputManager.getValidString();
+            productPath = InputManager.getValidString();
 
             System.out.print("Enter salads path: ");
-            String saladPath = InputManager.getValidString();
+            saladPath = InputManager.getValidString();
+        }
 
-            while (true) {
+        while (true) {
 
-                try {
-                    appContext.fileManager.loadProducts(productPath).forEach(appContext.productService::addProduct);
-                    System.out.println("Products loaded!");
-                    break;
-                } catch (FileNotFoundException fileNotFoundException) {
-                    System.out.println(fileNotFoundException.getMessage());
-                    if (!InputManager.isContinue("Try another path for products?")) {
-                        return;
-                    }
-                    System.out.print("Enter products path: ");
-                    productPath = InputManager.getValidString();
-                }
-            }
+            try {
+                appContext.fileManager.loadProducts(productPath).forEach(appContext.productService::addProduct);
+                System.out.println("Products loaded successfully!");
+                break;
+            } catch (Exception e) {
+                logger.error("Error loading products from '{}': {}", productPath, e.getMessage(), e);
+                System.out.println("Error loading products: " + e.getMessage());
 
-            while (true) {
-                try {
-                    appContext.fileManager.loadSalads(saladPath, appContext.productService.getAllProducts()).forEach(appContext.saladService::addSalad);
-                    System.out.println("Salads loaded!");
-                    break;
-                } catch (FileNotFoundException fileNotFoundException) {
-                    System.out.println(fileNotFoundException.getMessage());
-                    if (!InputManager.isContinue("Try another path for salads?")) {
-                        return;
-                    }
-                    System.out.print("Enter salad path: ");
-                    saladPath = InputManager.getValidString();
+                if (!InputManager.isContinue("Try another path for products?")) {
+                    return;
                 }
 
+                System.out.print("Enter products path: ");
+                productPath = InputManager.getValidString();
             }
         }
 
+        while (true) {
+            try {
+                appContext.fileManager.loadSalads(saladPath, appContext.productService.getAllProducts()).forEach(appContext.saladService::addSalad);
+                System.out.println("Salads loaded successfully!");
+                break;
+            } catch (Exception exception) {
+                logger.error("Error loading salads from '{}': {}", saladPath, exception.getMessage(), exception);
+                System.out.println("Error loading salads: " + exception.getMessage());
+                if (!InputManager.isContinue("Try another path for salads?")) {
+                    return;
+                }
+                System.out.print("Enter salad path: ");
+                saladPath = InputManager.getValidString();
+            }
+        }
     }
 
     @Override

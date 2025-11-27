@@ -1,5 +1,7 @@
 package org.egorik.command.product;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.egorik.command.Command;
 import org.egorik.manager.InputManager;
 import org.egorik.model.Product;
@@ -11,6 +13,8 @@ import org.egorik.utils.SelectUtility;
 import java.util.List;
 
 public class DeleteProductCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger(DeleteProductCommand.class);
 
     private final SaladService saladService;
     private final ProductService productService;
@@ -42,6 +46,7 @@ public class DeleteProductCommand implements Command {
                 productService.deleteProduct(ind);
             }
         } else {
+            logger.warn("Can't delete product - {}! Because he is in salads - {}!", product, saladList);
             System.out.println("Can't delete product! Because he is in salads!");
             saladList.forEach(System.out::println);
         }

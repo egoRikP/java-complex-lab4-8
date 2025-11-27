@@ -1,5 +1,7 @@
 package org.egorik.manager;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.egorik.model.*;
 
 import java.io.*;
@@ -11,10 +13,13 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
+    static private final Logger logger = LogManager.getLogger(FileManager.class);
+
     public final String DEFAULT_PRODUCTS_PATH = "src/main/resources/products.txt";
     public final String DEFAULT_SALADS_PATH = "src/main/resources/salads.txt";
 
-    public List<Product> loadProducts(String path) throws FileNotFoundException {
+    public List<Product> loadProducts(String path) throws IOException {
+        logger.info("Loading products from '{}'", path);
         List<Product> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String buff;
@@ -26,17 +31,19 @@ public class FileManager {
                 } catch (Exception e) {
                     System.out.printf("Error in product file at line %d: %s\nContent: %s\n",
                             lineNumber, e.getMessage(), buff);
+                    logger.warn("Error {} in product file at line {}: {}",
+                            e.getMessage(), lineNumber, buff);
                 }
                 lineNumber++;
             }
 
-        } catch (IOException ioException) {
-            throw new FileNotFoundException(String.format("Can't find product file - %s", path));
         }
+        logger.info("Loaded {} products from '{}'", result.size(), path);
         return result;
     }
 
-    public List<Salad> loadSalads(String path, List<Product> products) throws FileNotFoundException {
+    public List<Salad> loadSalads(String path, List<Product> products) throws IOException {
+        logger.info("Loading salads from '{}'", path);
         List<Salad> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String buff;
@@ -47,60 +54,74 @@ public class FileManager {
                     result.add(getSaladFromString(buff, products));
                 } catch (Exception e) {
                     System.out.printf("Error in salad file at line %d: %s\n%s\n", lineNumber, buff, e.getMessage());
+                    logger.warn("Error {} in salad file at line {}: {}",
+                            e.getMessage(), lineNumber, buff);
                 }
                 lineNumber++;
             }
 
         } catch (IOException e) {
-            throw new FileNotFoundException("Can't find salad file: " + path);
+            logger.error("Can't find salad file - {}", path);
+            throw new IOException("Can't find salad file: " + path);
         }
+        logger.info("Loaded {} salads from '{}'", result.size(), path);
         return result;
     }
 
     public void saveProducts(List<Product> products, String path) {
 
-        File file = new File(path);
-        File parent = file.getParentFile();
-
-        if (parent != null && !parent.exists()) {
-            parent.mkdirs();
-        }
-
         if (!products.isEmpty()) {
+            logger.info("Saving {} products to '{}'", products.size(), path);
+
+            File file = new File(path);
+            File parent = file.getParentFile();
+
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
+            }
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
 
                 for (Product product : products) {
                     writer.write(getProductAsString(product));
                     writer.newLine();
                 }
+                logger.info("Saved {} products to '{}'", products.size(), path);
 
             } catch (IOException ioException) {
+                logger.error("Error saving products file '{}': {}", path, ioException.getMessage());
                 System.out.printf("Error saving products file '%s': %s\n", path, ioException.getMessage());
             }
+        } else {
+            logger.warn("Can't save empty product list");
         }
 
     }
 
     public void saveSalads(List<Salad> salads, String path) {
 
-        File file = new File(path);
-        File parent = file.getParentFile();
-
-        if (parent != null && !parent.exists()) {
-            parent.mkdirs();
-        }
-
         if (!salads.isEmpty()) {
+            logger.info("Saving {} salads to '{}'", salads.size(), path);
+
+            File file = new File(path);
+            File parent = file.getParentFile();
+
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
+            }
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
 
                 for (Salad salad : salads) {
                     writer.write(getSaladAsString(salad));
                     writer.newLine();
                 }
+                logger.info("Saved {} salads to '{}'", salads.size(), path);
 
             } catch (IOException ioException) {
+                logger.error("Error saving salads file '{}': {}", path, ioException.getMessage());
                 System.out.printf("Error saving salads file '%s': %s\n", path, ioException.getMessage());
             }
+        } else {
+            logger.warn("Can't save empty salad list");
         }
     }
 

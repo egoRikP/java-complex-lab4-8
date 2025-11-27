@@ -1,10 +1,10 @@
-Summer Fresh Salad|Tomato:100;Cucumber:150;Lettuce:50|fresh;light;vegan|wash;cut;mix;serve chilled|5
-Protein Boost Salad|Spinach:80;Egg:100;Broccoli:70|protein;healthy;energy|boil eggs;chop veggies;mix;serve|12
-Carrot & Beet Power Mix|Carrot:120;Beetroot:120|fiber;detox;root|grate carrots;grate beetroot;mix|10
-Green Detox Bowl|Cucumber:120;Broccoli:100;Spinach:60|detox;green;healthy|steam broccoli;chop cucumber;mix with spinach|8
-Sweet Energy Salad|Apple:80;Banana:60|sweet;energy;fruit|slice apple;slice banana;combine;serve|4
-Classic Garden Salad|Tomato:100;Cucumber:100;Lettuce:70|classic;fresh|chop vegetables;mix;serve|6
-Iron Boost Salad|Spinach:70;Beetroot:90;Apple:40|iron;healthy;vitamins|wash spinach;slice apple;mix with beetroot|7
-Crunchy Veggie Salad|Carrot:100;Cucumber:100;Broccoli:60|crunchy;vegan;fresh|cut vegetables;mix;serve|5
-Fruit & Greens Fusion|Apple:60;Spinach:50;Banana:50|fusion;light;vitamins|slice fruits;add spinach;mix|5
-Ukrainian Fresh Bowl|Tomato:120;Cucumber:100;Apple:50|fresh;simple;traditional|chop;mix;serve|6
+Summer Fresh Salad|Tomato:100.0;Cucumber:150.0;Lettuce:50.0|light;vegan;fresh|wash;cut;mix;serve chilled|5
+Protein Boost Salad|Spinach:80.0;Egg:100.0;Broccoli:70.0|healthy;protein;energy|boil eggs;chop veggies;mix;serve|12
+Carrot & Beet Power Mix|Carrot:120.0;Beetroot:120.0|fiber;root;detox|grate carrots;grate beetroot;mix|10
+Green Detox Bowl|Cucumber:120.0;Broccoli:100.0;Spinach:60.0|green;healthy;detox|steam broccoli;chop cucumber;mix with spinach|8
+Sweet Energy Salad|Apple:80.0;Banana:60.0|fruit;sweet;energy|slice apple;slice banana;combine;serve|4
+Classic Garden Salad|Tomato:100.0;Cucumber:100.0;Lettuce:70.0|classic;fresh|chop vegetables;mix;serve|6
+Iron Boost Salad|Spinach:70.0;Beetroot:90.0;Apple:40.0|vitamins;healthy;iron|wash spinach;slice apple;mix with beetroot|7
+Crunchy Veggie Salad|Carrot:100.0;Cucumber:100.0;Broccoli:60.0|crunchy;vegan;fresh|cut vegetables;mix;serve|5
+Fruit & Greens Fusion|Apple:60.0;Spinach:50.0;Banana:50.0|fusion;vitamins;light|slice fruits;add spinach;mix|5
+Ukrainian Fresh Bowl|Tomato:120.0;Cucumber:100.0;Apple:50.0|traditional;simple;fresh|chop;mix;serve|6

@@ -1,5 +1,7 @@
 package org.egorik.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.egorik.model.Product;
 import org.egorik.model.Salad;
 import org.egorik.model.SaladPatch;
@@ -11,7 +13,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class SaladService {
-
+    private static final Logger logger = LogManager.getLogger(SaladService.class);
     private final Repository<Salad> repository;
 
     public SaladService(Repository<Salad> repository) {
@@ -29,9 +31,11 @@ public class SaladService {
     public void addSalad(Salad newSalad) {
         if (isSaladExists(newSalad)) {
             System.out.printf("Salad - %s - exists!\n", newSalad);
+            logger.warn("Salad - {} - exists", newSalad);
             return;
         }
         repository.add(newSalad);
+        logger.info("Add new salad - {}", newSalad);
     }
 
     public List<Salad> getAllSalads() {
@@ -40,10 +44,13 @@ public class SaladService {
 
     public void updateSalad(int ind, SaladPatch saladPatch) {
         saladPatch.updateSalad(repository.getAll().get(ind));
+        logger.info("Update salad with id - {} - {} ", ind, getAllSalads().get(ind));
     }
 
     public void deleteSalad(int ind) {
+        Salad toDelete = getAllSalads().get(ind);
         repository.delete(ind);
+        logger.info("Delete salad with id - {} - {} ", ind, toDelete);
     }
 
     private List<Salad> filter(Predicate<Salad> predicate) {
