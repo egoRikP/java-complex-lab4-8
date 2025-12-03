@@ -10,8 +10,11 @@ public class FileSaveCommand implements Command {
 
     private final AppContext appContext;
 
-    public FileSaveCommand(AppContext appContext) {
+    private final InputManager inputManager;
+
+    public FileSaveCommand(AppContext appContext, InputManager inputManager) {
         this.appContext = appContext;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -24,12 +27,12 @@ public class FileSaveCommand implements Command {
         System.out.printf("Default path to save products - %s\n", productPath);
         System.out.printf("Default path to save salads - %s\n", saladPath);
 
-        if (!InputManager.isContinue("Use default paths?")) {
+        if (!inputManager.isContinue("Use default paths?")) {
             System.out.print("Enter products path: ");
-            productPath = InputManager.getValidString();
+            productPath = inputManager.getValidString();
 
             System.out.print("Enter salads path: ");
-            saladPath = InputManager.getValidString();
+            saladPath = inputManager.getValidString();
         }
 
         appContext.fileManager.saveProducts(appContext.productService.getAllProducts(), productPath);

@@ -14,9 +14,11 @@ import java.util.stream.Collectors;
 public class GetSaladsByTagSetCommand implements Command {
 
     private final SaladService saladService;
+    private final InputManager inputManager;
 
-    public GetSaladsByTagSetCommand(SaladService saladService) {
+    public GetSaladsByTagSetCommand(SaladService saladService, InputManager inputManager) {
         this.saladService = saladService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -27,7 +29,7 @@ public class GetSaladsByTagSetCommand implements Command {
         }
 
         System.out.print("Enter tags with spaces: ");
-        Set<String> tags = Arrays.stream(InputManager.getString().toLowerCase().split(" "))
+        Set<String> tags = Arrays.stream(inputManager.getString().toLowerCase().split(" "))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .collect(Collectors.toCollection(HashSet::new));

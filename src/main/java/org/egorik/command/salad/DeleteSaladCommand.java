@@ -8,9 +8,11 @@ import org.egorik.utils.SelectUtility;
 public class DeleteSaladCommand implements Command {
 
     private final SaladService saladService;
+    private final InputManager inputManager;
 
-    public DeleteSaladCommand(SaladService saladService) {
+    public DeleteSaladCommand(SaladService saladService, InputManager inputManager) {
         this.saladService = saladService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -20,13 +22,13 @@ public class DeleteSaladCommand implements Command {
             return;
         }
 
-        int ind = SelectUtility.selectInd(saladService.getAllSalads());
+        int ind = SelectUtility.selectInd(saladService.getAllSalads(),inputManager);
 
         if (ind == -1) {
             return;
         }
 
-        if (InputManager.isContinue(String.format("Delete %s ?", saladService.getAllSalads().get(ind)))) {
+        if (inputManager.isContinue(String.format("Delete %s ?", saladService.getAllSalads().get(ind)))) {
             saladService.deleteSalad(ind);
         }
     }

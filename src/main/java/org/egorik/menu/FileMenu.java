@@ -12,8 +12,8 @@ public class FileMenu extends AbstractMenu {
 
     @Override
     protected void init() {
-        addCommand(1, new FileSaveCommand(appContext));
-        addCommand(2, new FileLoadCommand(appContext));
+        addCommand(1, new FileSaveCommand(appContext,appContext.inputManager));
+        addCommand(2, new FileLoadCommand(appContext,appContext.inputManager));
     }
 
     @Override

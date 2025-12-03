@@ -84,7 +84,7 @@ public abstract class AbstractMenu implements Command {
 
             System.out.println();
             System.out.print("Enter action id: ");
-            userInput = InputManager.getValidIntInRange(-1, commands.size());
+            userInput = appContext.inputManager.getValidIntInRange(-1, commands.size());
 
             switch (userInput) {
                 case -1 -> {

@@ -10,9 +10,11 @@ import java.util.List;
 public class GetProductsByNameCommand implements Command {
 
     private final ProductService productService;
+    private final InputManager inputManager;
 
-    public GetProductsByNameCommand(ProductService productService) {
+    public GetProductsByNameCommand(ProductService productService, InputManager inputManager) {
         this.productService = productService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -23,7 +25,7 @@ public class GetProductsByNameCommand implements Command {
         }
 
         System.out.println("Enter product name to find: ");
-        String name = InputManager.getValidString().toLowerCase();
+        String name = inputManager.getValidString().toLowerCase();
 
         List<Product> result = productService.getProductsByName(name);
 

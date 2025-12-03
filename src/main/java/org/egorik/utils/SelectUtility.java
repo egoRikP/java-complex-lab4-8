@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SelectUtility {
 
-    static public <T> int selectInd(List<T> list) {
+    static public <T> int selectInd(List<T> list, InputManager input) {
 
         if (list.isEmpty()) {
             System.out.println("List is empty!");
@@ -20,10 +20,10 @@ public class SelectUtility {
         }
 
         System.out.print("Enter index in range [0; " + (list.size() - 1) + "] or -1 to exit: ");
-        return InputManager.getValidIntInRange(-1, list.size() - 1);
+        return input.getValidIntInRange(-1, list.size() - 1);
     }
 
-    static public <T> T selectOne(List<T> list) {
+    static public <T> T selectOne(List<T> list, InputManager input) {
 
         if (list.isEmpty()) {
             System.out.println("List is empty!");
@@ -31,7 +31,7 @@ public class SelectUtility {
         }
 
         System.out.print("Enter index in range [0; " + (list.size() - 1) + "] or -1 to exit: ");
-        int ind = InputManager.getValidIntInRange(-1, list.size() - 1);
+        int ind = input.getValidIntInRange(-1, list.size() - 1);
 
         if (ind == -1) {
             return null;
@@ -42,7 +42,7 @@ public class SelectUtility {
         return list.get(ind);
     }
 
-    static public <T> List<T> selectMany(List<T> list) {
+    static public <T> List<T> selectMany(List<T> list, InputManager input) {
         if (list.isEmpty()) {
             System.out.println("List is empty!");
             return Collections.emptyList();
@@ -51,7 +51,7 @@ public class SelectUtility {
         List<T> selectedList = new ArrayList<>();
 
         do {
-            T selected = selectOne(list);
+            T selected = selectOne(list,input);
 
             if (selected == null) {
                 break;
@@ -64,7 +64,7 @@ public class SelectUtility {
             }
 
 
-        } while (InputManager.isContinue("Select other?"));
+        } while (input.isContinue("Select other?"));
 
         return selectedList;
     }

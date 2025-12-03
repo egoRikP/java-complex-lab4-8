@@ -1,5 +1,7 @@
 package org.egorik.model;
 
+import java.util.Objects;
+
 public class RootVegetable extends Vegetable {
     private int starchContent;
 

@@ -1,5 +1,7 @@
 package org.egorik.command.product;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.egorik.command.Command;
 import org.egorik.manager.InputManager;
 import org.egorik.model.LeafyVegetable;
@@ -10,10 +12,13 @@ import org.egorik.service.ProductService;
 
 public class CreateProductCommand implements Command {
 
+    private static final Logger logger = LogManager.getLogger(CreateProductCommand.class);
     private final ProductService productService;
+    private final InputManager inputManager;
 
-    public CreateProductCommand(ProductService productService) {
+    public CreateProductCommand(ProductService productService, InputManager inputManager) {
         this.productService = productService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -23,22 +28,22 @@ public class CreateProductCommand implements Command {
         System.out.println("2 - Vegetable");
         System.out.println("3 - Leafy vegetable");
         System.out.println("4 - Root vegetable");
-        int type = InputManager.getValidIntInRange(1, 4);
+        int type = inputManager.getValidIntInRange(1, 4);
 
         System.out.print("Enter product name: ");
-        String name = InputManager.getValidString();
+        String name = inputManager.getValidString();
 
         System.out.print("Enter calories per 100g: ");
-        int calories = InputManager.getPositiveInt();
+        int calories = inputManager.getPositiveInt();
 
         System.out.print("Enter proteins per 100g: ");
-        int proteins = InputManager.getPositiveInt();
+        int proteins = inputManager.getPositiveInt();
 
         System.out.print("Enter fats per 100g: ");
-        int fats = InputManager.getPositiveInt();
+        int fats = inputManager.getPositiveInt();
 
         System.out.print("Enter carbs per 100g: ");
-        int carbs = InputManager.getPositiveInt();
+        int carbs = inputManager.getPositiveInt();
 
         Product newProduct;
 
@@ -46,25 +51,30 @@ public class CreateProductCommand implements Command {
             newProduct = new Product(name, calories, proteins, fats, carbs);
         } else {
             System.out.print("Enter vegetable type: ");
-            String vegType = InputManager.getValidString();
+            String vegType = inputManager.getValidString();
             newProduct = switch (type) {
                 case 2 -> new Vegetable(name, calories, proteins, fats, carbs, vegType);
                 case 3 -> {
                     System.out.print("Enter water percentage: ");
-                    int water = InputManager.getPositiveInt();
+                    int water = inputManager.getPositiveInt();
                     yield new LeafyVegetable(name, calories, proteins, fats, carbs, vegType, water);
                 }
                 case 4 -> {
                     System.out.print("Enter starch content: ");
-                    int starch = InputManager.getPositiveInt();
+                    int starch = inputManager.getPositiveInt();
                     yield new RootVegetable(name, calories, proteins, fats, carbs, vegType, starch);
                 }
                 default -> throw new IllegalArgumentException("Invalid type" + type);
             };
         }
 
-        productService.addProduct(newProduct);
-        System.out.println("Added new product: " + newProduct);
+        if (!productService.isProductExists(newProduct)) {
+            productService.addProduct(newProduct);
+            System.out.println("Added new product: " + newProduct);
+        } else {
+            logger.warn("Product - {} - exists", newProduct);
+            System.out.printf("Product - %s - exists!\n", newProduct);
+        }
     }
 
 

@@ -9,9 +9,11 @@ import java.util.List;
 
 public class GetSaladsByNameCommand implements Command {
     private final SaladService saladService;
+    private final InputManager inputManager;
 
-    public GetSaladsByNameCommand(SaladService saladService) {
+    public GetSaladsByNameCommand(SaladService saladService, InputManager inputManager) {
         this.saladService = saladService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -22,7 +24,7 @@ public class GetSaladsByNameCommand implements Command {
         }
 
         System.out.print("Enter salad name: ");
-        String name = InputManager.getValidString();
+        String name = inputManager.getValidString();
         List<Salad> result = saladService.getSaladsByName(name);
 
         if (result.isEmpty()) {

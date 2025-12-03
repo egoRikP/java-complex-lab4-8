@@ -2,6 +2,7 @@ package org.egorik.command.salad;
 
 import org.egorik.command.Command;
 import org.egorik.command.product.GetProductsCommand;
+import org.egorik.manager.InputManager;
 import org.egorik.model.Product;
 import org.egorik.model.Salad;
 import org.egorik.service.ProductService;
@@ -14,10 +15,12 @@ public class GetSaladsByIngredientsCommand implements Command {
 
     private final SaladService saladService;
     private final ProductService productService;
+    private final InputManager inputManager;
 
-    public GetSaladsByIngredientsCommand(SaladService saladService, ProductService productService) {
+    public GetSaladsByIngredientsCommand(SaladService saladService, ProductService productService, InputManager inputManager) {
         this.saladService = saladService;
         this.productService = productService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -36,7 +39,7 @@ public class GetSaladsByIngredientsCommand implements Command {
         System.out.print("Enter ingredients: ");
         new GetProductsCommand(productService).execute();
 
-        List<Product> ingredients = SelectUtility.selectMany(productService.getAllProducts());
+        List<Product> ingredients = SelectUtility.selectMany(productService.getAllProducts(),inputManager);
         List<Salad> result = saladService.getSaladsByProducts(ingredients);
 
         if (result.isEmpty()) {

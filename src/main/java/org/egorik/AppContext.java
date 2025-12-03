@@ -1,6 +1,7 @@
 package org.egorik;
 
 import org.egorik.manager.FileManager;
+import org.egorik.manager.InputManager;
 import org.egorik.model.Product;
 import org.egorik.model.Salad;
 import org.egorik.repository.MemoryRepository;
@@ -16,4 +17,7 @@ public class AppContext {
     public final SaladService saladService = new SaladService(saladMemoryRepository);
 
     public final FileManager fileManager = new FileManager();
+
+    public final InputManager inputManager = new InputManager();
+
 }

@@ -10,9 +10,11 @@ import java.util.List;
 public class GetProductsByCaloriesCommand implements Command {
 
     private final ProductService productService;
+    private final InputManager inputManager;
 
-    public GetProductsByCaloriesCommand(ProductService productService) {
+    public GetProductsByCaloriesCommand(ProductService productService, InputManager inputManager) {
         this.productService = productService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -23,13 +25,13 @@ public class GetProductsByCaloriesCommand implements Command {
         }
 
         System.out.println("Enter [min] calories: ");
-        int min = InputManager.getPositiveInt();
+        int min = inputManager.getPositiveInt();
 
         System.out.println("Enter [max] calories: ");
-        int max = InputManager.getValidInt();
+        int max = inputManager.getValidInt();
         while (min > max) {
             System.out.println("Bigger or equals " + min);
-            max = InputManager.getValidInt();
+            max = inputManager.getValidInt();
         }
 
         List<Product> result = productService.getProductsByCalories(min, max);

@@ -7,9 +7,11 @@ import org.egorik.service.ProductService;
 public class SortProductByCaloriesCommand implements Command {
 
     private final ProductService productService;
+    private final InputManager inputManager;
 
-    public SortProductByCaloriesCommand(ProductService productService) {
+    public SortProductByCaloriesCommand(ProductService productService, InputManager inputManager) {
         this.productService = productService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -21,8 +23,8 @@ public class SortProductByCaloriesCommand implements Command {
 
         new GetProductsCommand(productService).execute();
 
-        if (InputManager.isContinue("Sort?")) {
-            boolean choice = InputManager.isContinue("In asc?");
+        if (inputManager.isContinue("Sort?")) {
+            boolean choice = inputManager.isContinue("In asc?");
             productService.sortProductsByCalories(choice);
         }
 

@@ -10,9 +10,12 @@ import java.util.List;
 public class GetSaladsByCaloriesCommand implements Command {
 
     private final SaladService saladService;
+    private final InputManager inputManager;
 
-    public GetSaladsByCaloriesCommand(SaladService saladService) {
+
+    public GetSaladsByCaloriesCommand(SaladService saladService, InputManager inputManager) {
         this.saladService = saladService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -23,10 +26,10 @@ public class GetSaladsByCaloriesCommand implements Command {
         }
 
         System.out.println("Enter min calories: ");
-        int min = InputManager.getPositiveInt();
+        int min = inputManager.getPositiveInt();
 
         System.out.println("Enter max calories: ");
-        int max = InputManager.getPositiveInt();
+        int max = inputManager.getPositiveInt();
 
         List<Salad> result = saladService.getSaladsByTotalCalories(min, max);
         if (result.isEmpty()) {

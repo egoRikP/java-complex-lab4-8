@@ -18,10 +18,12 @@ public class DeleteProductCommand implements Command {
 
     private final SaladService saladService;
     private final ProductService productService;
+    private final InputManager inputManager;
 
-    public DeleteProductCommand(ProductService productService, SaladService saladService) {
+    public DeleteProductCommand(ProductService productService, SaladService saladService, InputManager inputManager) {
         this.productService = productService;
         this.saladService = saladService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class DeleteProductCommand implements Command {
             return;
         }
 
-        int ind = SelectUtility.selectInd(productService.getAllProducts());
+        int ind = SelectUtility.selectInd(productService.getAllProducts(), inputManager);
 
         if (ind == -1) {
             return;
@@ -42,7 +44,7 @@ public class DeleteProductCommand implements Command {
         List<Salad> saladList = saladService.getSaladsByProducts(product);
 
         if (saladList.isEmpty()) {
-            if (InputManager.isContinue(String.format("Delete %s ?", productService.getAllProducts().get(ind)))) {
+            if (inputManager.isContinue(String.format("Delete %s ?", productService.getAllProducts().get(ind)))) {
                 productService.deleteProduct(ind);
             }
         } else {

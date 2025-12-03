@@ -18,53 +18,55 @@ public class CreateSaladCommand implements Command {
 
     private final SaladService saladService;
     private final ProductService productService;
+    private final InputManager inputManager;
 
-    public CreateSaladCommand(SaladService saladService, ProductService productService) {
+    public CreateSaladCommand(SaladService saladService, ProductService productService, InputManager inputManager) {
         this.saladService = saladService;
         this.productService = productService;
+        this.inputManager = inputManager;
     }
 
     @Override
     public void execute() {
         if (productService.isProductsEmpty()) {
             System.out.println("No products, first create product!");
-            if (!InputManager.isContinue("Continue to create product and then salad?")) {
+            if (!inputManager.isContinue("Continue to create product and then salad?")) {
                 return;
             }
-            new CreateProductCommand(productService).execute();
+            new CreateProductCommand(productService, inputManager).execute();
         }
 
         System.out.print("Enter salad name: ");
-        String name = InputManager.getValidString();
+        String name = inputManager.getValidString();
 
         System.out.println("Enter ingredients: ");
         List<Ingredient> ingredients = new ArrayList<>();
 
         do {
             System.out.print("Enter product name: ");
-            String productName = InputManager.getValidString().toLowerCase();
+            String productName = inputManager.getValidString().toLowerCase();
             List<Product> result = productService.getProductsByName(productName);
 
             if (result.isEmpty()) {
                 System.out.println("Empty result!");
-                if (!InputManager.isContinue("Continue?")) {
+                if (!inputManager.isContinue("Continue?")) {
                     break;
                 }
                 continue;
             }
 
-            int ind = SelectUtility.selectInd(result);
+            int ind = SelectUtility.selectInd(result,inputManager);
 
             if (ind == -1) {
                 continue;
             }
 
             System.out.print("Enter product weight: ");
-            int weight = InputManager.getPositiveInt();
+            int weight = inputManager.getPositiveInt();
 
             ingredients.add(new Ingredient(result.get(ind), weight));
 
-        } while (InputManager.isContinue("Add other ingredient?"));
+        } while (inputManager.isContinue("Add other ingredient?"));
 
         System.out.println("Enter instruction step by step (q - to stop):");
         List<String> instruction = new ArrayList<>();
@@ -74,7 +76,7 @@ public class CreateSaladCommand implements Command {
 
         while (true) {
             System.out.printf("%d). ", step);
-            buff = InputManager.getValidString();
+            buff = inputManager.getValidString();
 
             if (buff.equals("q")) {
                 break;
@@ -87,13 +89,13 @@ public class CreateSaladCommand implements Command {
 
         while (true) {
             System.out.print("Enter tags with spaces (example: \"newyear easy fast\"): ");
-            stringTags = InputManager.getString().trim();
+            stringTags = inputManager.getString().trim();
 
             if (!stringTags.isBlank()) {
                 break;
             }
 
-            if (stringTags.isBlank() && InputManager.isContinue("Skip tags?")) {
+            if (stringTags.isBlank() && inputManager.isContinue("Skip tags?")) {
                 break;
             }
         }
@@ -101,7 +103,7 @@ public class CreateSaladCommand implements Command {
         HashSet<String> tags = new HashSet<>(List.of(stringTags.split(" ")));
 
         System.out.print("Enter time to finish salad: ");
-        int timeToFinish = InputManager.getPositiveInt();
+        int timeToFinish = inputManager.getPositiveInt();
 
         saladService.addSalad(new Salad(name, timeToFinish, ingredients, instruction, tags));
     }

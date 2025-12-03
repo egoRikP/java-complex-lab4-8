@@ -12,9 +12,11 @@ import java.util.Map;
 public class UpdateProductCommand implements Command {
 
     private final ProductService productService;
+    private final InputManager inputManager;
 
-    public UpdateProductCommand(ProductService productService) {
+    public UpdateProductCommand(ProductService productService, InputManager inputManager) {
         this.productService = productService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class UpdateProductCommand implements Command {
             return;
         }
 
-        int ind = SelectUtility.selectInd(productService.getAllProducts());
+        int ind = SelectUtility.selectInd(productService.getAllProducts(), inputManager);
 
         if (ind == -1) {
             return;
@@ -32,7 +34,7 @@ public class UpdateProductCommand implements Command {
 
         Product toUpdate = productService.getAllProducts().get(ind);
 
-        if (!InputManager.isContinue(String.format("Update %s ?", toUpdate))) {
+        if (!inputManager.isContinue(String.format("Update %s ?", toUpdate))) {
             return;
         }
 
@@ -45,39 +47,39 @@ public class UpdateProductCommand implements Command {
 
             actions.put(1, () -> {
                 System.out.println("New name: ");
-                productPatch.name = InputManager.getValidString();
+                productPatch.name = inputManager.getValidString();
             });
             actions.put(2, () -> {
                 System.out.println("New calories: ");
-                productPatch.caloriesPer100 = InputManager.getPositiveInt();
+                productPatch.caloriesPer100 = inputManager.getPositiveInt();
             });
             actions.put(3, () -> {
                 System.out.println("New proteins: ");
-                productPatch.proteinsPer100 = InputManager.getPositiveInt();
+                productPatch.proteinsPer100 = inputManager.getPositiveInt();
             });
             actions.put(4, () -> {
                 System.out.println("New fats: ");
-                productPatch.fatsPer100 = InputManager.getPositiveInt();
+                productPatch.fatsPer100 = inputManager.getPositiveInt();
             });
             actions.put(5, () -> {
                 System.out.println("New carbs: ");
-                productPatch.carbsPer100 = InputManager.getPositiveInt();
+                productPatch.carbsPer100 = inputManager.getPositiveInt();
             });
 
             if (toUpdate instanceof Vegetable)
                 actions.put(6, () -> {
                     System.out.println("New vegetable type: ");
-                    productPatch.type = InputManager.getValidString();
+                    productPatch.type = inputManager.getValidString();
                 });
             if (toUpdate instanceof LeafyVegetable)
                 actions.put(7, () -> {
                     System.out.println("New water percentage: ");
-                    productPatch.waterPercentage = InputManager.getPositiveInt();
+                    productPatch.waterPercentage = inputManager.getPositiveInt();
                 });
             if (toUpdate instanceof RootVegetable)
                 actions.put(7, () -> {
                     System.out.println("New starch: ");
-                    productPatch.starchContent = InputManager.getPositiveInt();
+                    productPatch.starchContent = inputManager.getPositiveInt();
                 });
 
             System.out.println("1 - Name");
@@ -96,10 +98,10 @@ public class UpdateProductCommand implements Command {
                 System.out.println("7 - Starch content");
             }
 
-            int choice = InputManager.getValidIntInRange(1, actions.size());
+            int choice = inputManager.getValidIntInRange(1, actions.size());
             actions.get(choice).run();
 
-        } while (InputManager.isContinue("Continue to other values?"));
+        } while (inputManager.isContinue("Continue to other values?"));
 
 
         productService.updateProduct(ind, productPatch);

@@ -3,16 +3,25 @@ package org.egorik.manager;
 import java.util.Scanner;
 
 public class InputManager {
-    private static final Scanner myScanner = new Scanner(System.in);
+    private Scanner myScanner;
 
-    public static Scanner getMyScanner() {
+    public InputManager() {
+        this.myScanner = new Scanner(System.in);
+    }
+
+    public InputManager(Scanner myScanner) {
+        this.myScanner = myScanner;
+    }
+
+    public Scanner getMyScanner() {
         return myScanner;
     }
 
-    private InputManager() {
+    public void setMyScanner(Scanner myScanner) {
+        this.myScanner = myScanner;
     }
 
-    static public int getPositiveInt() {
+    public int getPositiveInt() {
         int result = getValidInt();
         while (result < 0) {
             System.out.print("Only positive int: ");
@@ -21,20 +30,25 @@ public class InputManager {
         return result;
     }
 
-    static public int getValidInt() {
+    public int getValidInt() {
         while (true) {
             if (myScanner.hasNextInt()) {
                 int res = myScanner.nextInt();
-                myScanner.nextLine();
+                if (myScanner.hasNextLine()) {
+                    myScanner.nextLine(); // з’їсти \n
+                }
                 return res;
             } else {
-                myScanner.nextLine();
+                if (myScanner.hasNextLine()) {
+                    myScanner.nextLine();
+                }
                 System.out.print("Only int: ");
             }
         }
     }
 
-    static public int getValidIntInRange(int min, int max) {
+
+    public int getValidIntInRange(int min, int max) {
         int res = getValidInt();
         while (res > max || res < min) {
             System.out.printf("Only int in range [%d;%d]: ", min, max);
@@ -43,11 +57,11 @@ public class InputManager {
         return res;
     }
 
-    public static String getString() {
+    public String getString() {
         return myScanner.nextLine();
     }
 
-    public static String getValidString() {
+    public String getValidString() {
         String buff = getString();
         while (buff.isBlank()) {
             System.out.println("String can't be empty!");
@@ -56,7 +70,7 @@ public class InputManager {
         return buff;
     }
 
-    public static boolean isContinue(String text) {
+    public boolean isContinue(String text) {
         System.out.println(text + " (y/n)");
 
         while (true) {

@@ -29,17 +29,16 @@ public class ProductService {
     }
 
     public void addProduct(Product newProduct) {
-        if (isProductExists(newProduct)) {
-            logger.warn("Product - {} - exists", newProduct);
-            System.out.printf("Product - %s - exists!\n", newProduct);
-            return;
-        }
         repository.add(newProduct);
         logger.info("Add new product - {}", newProduct);
     }
 
     public List<Product> getAllProducts() {
         return Collections.unmodifiableList(repository.getAll());
+    }
+
+    public List<Product> getAllModifiableProducts() {
+        return repository.getAll();
     }
 
     public void updateProduct(int ind, ProductPatch patch) {
@@ -73,7 +72,7 @@ public class ProductService {
         if (!inAscending) {
             productComparator = productComparator.reversed();
         }
-        repository.getAll().sort(productComparator);
+        getAllModifiableProducts().sort(productComparator);
         logger.info("Sorted products by calories {}", inAscending ? "ascending" : "descending");
     }
 }

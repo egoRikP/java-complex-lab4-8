@@ -17,12 +17,14 @@ public class UpdateSaladCommand implements Command {
 
     private final SaladService saladService;
     private final ProductService productService;
+    private final InputManager inputManager;
 
     private SaladPatch saladPatch = new SaladPatch();
 
-    public UpdateSaladCommand(SaladService saladService, ProductService productService) {
+    public UpdateSaladCommand(SaladService saladService, ProductService productService, InputManager inputManager) {
         this.saladService = saladService;
         this.productService = productService;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -33,7 +35,7 @@ public class UpdateSaladCommand implements Command {
             return;
         }
 
-        int ind = SelectUtility.selectInd(saladService.getAllSalads());
+        int ind = SelectUtility.selectInd(saladService.getAllSalads(),inputManager);
         if (ind == -1) {
             return;
         }
@@ -41,7 +43,7 @@ public class UpdateSaladCommand implements Command {
         Salad salad = saladService.getAllSalads().get(ind);
 
         System.out.println(salad);
-        if (!InputManager.isContinue("Want continue to update?")) {
+        if (!inputManager.isContinue("Want continue to update?")) {
             return;
         }
 
@@ -58,22 +60,22 @@ public class UpdateSaladCommand implements Command {
                     """);
 
             System.out.print("Enter: ");
-            int userChoice = InputManager.getValidIntInRange(1, 5);
+            int userChoice = inputManager.getValidIntInRange(1, 5);
 
             switch (userChoice) {
                 case 1 -> {
                     System.out.print("Enter new name: ");
-                    saladPatch.name = InputManager.getValidString();
+                    saladPatch.name = inputManager.getValidString();
                 }
                 case 2 -> saladPatch.ingredients = updateIngredients(salad.getIngredients());
                 case 3 -> saladPatch.instruction = updateInstructions(salad.getInstruction());
                 case 4 -> saladPatch.tags = updateTags(salad.getTags());
                 case 5 -> {
                     System.out.print("Enter new time to finish: ");
-                    saladPatch.timeToFinish = InputManager.getPositiveInt();
+                    saladPatch.timeToFinish = inputManager.getPositiveInt();
                 }
             }
-        } while (InputManager.isContinue("Continue to update other values?"));
+        } while (inputManager.isContinue("Continue to update other values?"));
 
         saladService.updateSalad(ind, saladPatch);
         System.out.println("Salad updated!");
@@ -94,13 +96,13 @@ public class UpdateSaladCommand implements Command {
             }
 
             new GetProductsCommand(productService).execute();
-            Product product = SelectUtility.selectOne(productService.getAllProducts());
+            Product product = SelectUtility.selectOne(productService.getAllProducts(),inputManager);
             if (product == null) {
                 return;
             }
 
             System.out.print("Enter weight (g): ");
-            int weight = InputManager.getPositiveInt();
+            int weight = inputManager.getPositiveInt();
 
             list.add(new Ingredient(product, weight));
             System.out.println("Ingredient added!");
@@ -113,7 +115,7 @@ public class UpdateSaladCommand implements Command {
                 for (int i = 0; i < list.size(); i++) {
                     System.out.printf("%d). %s\n", i, list.get(i));
                 }
-                Ingredient selected = SelectUtility.selectOne(list);
+                Ingredient selected = SelectUtility.selectOne(list,inputManager);
                 if (selected != null) {
                     list.remove(selected);
                     System.out.println("Ingredient removed!");
@@ -125,21 +127,21 @@ public class UpdateSaladCommand implements Command {
                 for (int i = 0; i < list.size(); i++) {
                     System.out.printf("%d). %s\n", i, list.get(i));
                 }
-                Ingredient selected = SelectUtility.selectOne(list);
+                Ingredient selected = SelectUtility.selectOne(list,inputManager);
                 if (selected == null) {
                     return;
                 }
 
                 System.out.printf("Current weight: %.1f\n", selected.getWeight());
                 System.out.println("Enter new weight (g): ");
-                double newWeight = InputManager.getPositiveInt();
+                double newWeight = inputManager.getPositiveInt();
 
                 list.set(list.indexOf(selected), new Ingredient(selected.getProduct(), newWeight));
             });
         }
 
         System.out.println("Enter: ");
-        actions.get(InputManager.getValidIntInRange(1, actions.size())).run();
+        actions.get(inputManager.getValidIntInRange(1, actions.size())).run();
 
         return list;
     }
@@ -153,7 +155,7 @@ public class UpdateSaladCommand implements Command {
         System.out.println("1 - Add step");
         actions.put(1, () -> {
             System.out.print("Enter new step: ");
-            list.add(InputManager.getValidString());
+            list.add(inputManager.getValidString());
             System.out.println("Added!");
         });
 
@@ -166,11 +168,11 @@ public class UpdateSaladCommand implements Command {
                 }
 
                 System.out.println("Enter step number: ");
-                int id = InputManager.getValidIntInRange(1, list.size());
+                int id = inputManager.getValidIntInRange(1, list.size());
                 System.out.println("Current: " + list.get(id - 1));
 
                 System.out.println("Enter new text: ");
-                list.set(id - 1, InputManager.getValidString());
+                list.set(id - 1, inputManager.getValidString());
                 System.out.println("Updated!");
             });
 
@@ -182,7 +184,7 @@ public class UpdateSaladCommand implements Command {
                 }
 
                 System.out.println("Enter step number: ");
-                int id = InputManager.getValidIntInRange(1, list.size());
+                int id = inputManager.getValidIntInRange(1, list.size());
                 list.remove(id - 1);
                 System.out.println("Removed!");
             });
@@ -192,7 +194,7 @@ public class UpdateSaladCommand implements Command {
         }
 
         System.out.print("Enter: ");
-        actions.get(InputManager.getValidIntInRange(1, actions.size())).run();
+        actions.get(inputManager.getValidIntInRange(1, actions.size())).run();
 
         return list;
     }
@@ -206,7 +208,7 @@ public class UpdateSaladCommand implements Command {
         System.out.println("1 - Add tag");
         actions.put(1, () -> {
             System.out.println("Enter tag: ");
-            String tag = InputManager.getValidString().trim().toLowerCase();
+            String tag = inputManager.getValidString().trim().toLowerCase();
 
             if (!tags.add(tag)) {
                 System.out.println("Already exists!");
@@ -217,7 +219,7 @@ public class UpdateSaladCommand implements Command {
             System.out.println("2 - Remove tag");
             actions.put(2, () -> {
                 System.out.println("Enter tag to remove: ");
-                String tag = InputManager.getValidString().trim().toLowerCase();
+                String tag = inputManager.getValidString().trim().toLowerCase();
                 if (tags.remove(tag)) {
                     System.out.println("Removed!");
                 } else {
@@ -230,7 +232,7 @@ public class UpdateSaladCommand implements Command {
         }
 
         System.out.print("Enter: ");
-        actions.get(InputManager.getValidIntInRange(1, actions.size())).run();
+        actions.get(inputManager.getValidIntInRange(1, actions.size())).run();
 
         return tags;
     }

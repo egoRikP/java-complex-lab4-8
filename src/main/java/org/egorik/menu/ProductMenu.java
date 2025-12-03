@@ -11,13 +11,13 @@ public class ProductMenu extends AbstractMenu {
 
     @Override
     protected void init() {
-        addCommand(1, new CreateProductCommand(appContext.productService));
+        addCommand(1, new CreateProductCommand(appContext.productService, appContext.inputManager));
         addCommand(2, new GetProductsCommand(appContext.productService));
-        addCommand(3, new GetProductsByCaloriesCommand(appContext.productService));
-        addCommand(4, new GetProductsByNameCommand(appContext.productService));
-        addCommand(5, new SortProductByCaloriesCommand(appContext.productService));
-        addCommand(6, new UpdateProductCommand(appContext.productService));
-        addCommand(7, new DeleteProductCommand(appContext.productService, appContext.saladService));
+        addCommand(3, new GetProductsByCaloriesCommand(appContext.productService, appContext.inputManager));
+        addCommand(4, new GetProductsByNameCommand(appContext.productService, appContext.inputManager));
+        addCommand(5, new SortProductByCaloriesCommand(appContext.productService,appContext.inputManager));
+        addCommand(6, new UpdateProductCommand(appContext.productService,appContext.inputManager));
+        addCommand(7, new DeleteProductCommand(appContext.productService, appContext.saladService, appContext.inputManager));
     }
 
     @Override
