@@ -80,7 +80,9 @@ class SaladServiceTest {
     @Test
     void shouldAddSalad() {
         int sizeBeforeAdd = saladService.getAllSalads().size();
+
         saladService.addSalad(new Salad("Salad", 25, new ArrayList<>(), new ArrayList<>(), Set.of()));
+
         assertEquals(sizeBeforeAdd + 1, saladService.getAllSalads().size());
         assertTrue(saladService.isSaladExists(new Salad("Salad", 25, new ArrayList<>(), new ArrayList<>(), Set.of())));
     }
@@ -88,7 +90,9 @@ class SaladServiceTest {
     @Test
     void shouldNotAddSalad() {
         int sizeBeforeAdd = saladService.getAllSalads().size();
+
         saladService.addSalad(new Salad("NewEmptySalad", 25, new ArrayList<>(), new ArrayList<>(), Set.of()));
+
         assertEquals(sizeBeforeAdd, saladService.getAllSalads().size());
     }
 
@@ -123,9 +127,7 @@ class SaladServiceTest {
 
     @Test
     void shouldGetSaladsByProductList() {
-
         List<Product> toFind = List.of(productList.get(1), productList.get(3));
-
         List<Salad> expectedList = List.of(saladService.getAllSalads().get(1), saladService.getAllSalads().get(2));
 
         assertEquals(2, saladService.getSaladsByProducts(toFind).size());
@@ -135,14 +137,13 @@ class SaladServiceTest {
     @Test
     void shouldNotGetSaladsByProductList() {
         List<Product> toFind = List.of(productList.get(5), productList.get(6));
+
         assertTrue(saladService.getSaladsByProducts(toFind).isEmpty());
     }
 
     @Test
     void shouldGetSaladsByTotalCalories() {
-        List<Salad> expectedList = List.of(saladService.getAllSalads().get(1), saladService.getAllSalads().get(2));
-
-//        assertEquals(expectedList, saladService.getSaladsByTotalCalories(1, 5));
+        assertEquals(List.of(), saladService.getSaladsByTotalCalories(1, 5));
     }
 
     @Test
@@ -172,7 +173,6 @@ class SaladServiceTest {
     void shouldGetSaladsByTimeToFinish() {
         assertEquals(1, saladService.getSaladsByTimeToFinish(25, 30).size());
         assertEquals(List.of(saladService.getAllSalads().get(0)), saladService.getSaladsByTimeToFinish(25, 30));
-
         assertEquals(2, saladService.getSaladsByTimeToFinish(0, 5).size());
         assertEquals(List.of(saladService.getAllSalads().get(1), saladService.getAllSalads().get(2)), saladService.getSaladsByTimeToFinish(0, 5));
     }
@@ -187,16 +187,14 @@ class SaladServiceTest {
         SaladPatch saladPatch = new SaladPatch();
         saladPatch.name = "newName";
         saladPatch.timeToFinish = 50;
-
         saladPatch.ingredients = List.of(new Ingredient(productList.get(0), 70), new Ingredient(productList.get(0), 50));
         saladPatch.tags = Set.of("easy", "free");
         saladPatch.instruction = List.of("one", "second", "third");
-
-
         Salad copy = new Salad(saladService.getAllSalads().get(0));
-        saladService.updateSalad(0, saladPatch);
-        assertFalse(saladService.isSaladExists(copy));
 
+        saladService.updateSalad(0, saladPatch);
+
+        assertFalse(saladService.isSaladExists(copy));
         assertEquals(saladPatch.name, saladService.getAllSalads().get(0).getName());
         assertEquals(saladPatch.timeToFinish, saladService.getAllSalads().get(0).getTimeToFinish());
         assertEquals(saladPatch.ingredients, saladService.getAllSalads().get(0).getIngredients());
@@ -207,7 +205,9 @@ class SaladServiceTest {
     @Test
     void shouldDeleteSalad() {
         int sizeBeforeDelete = saladService.getAllSalads().size();
+
         saladService.deleteSalad(0);
+
         assertFalse(saladService.isSaladExists(new Salad("NewEmptySalad", 25, new ArrayList<>(), new ArrayList<>(), Set.of())));
         assertEquals(sizeBeforeDelete - 1, saladService.getAllSalads().size());
     }
@@ -218,12 +218,14 @@ class SaladServiceTest {
         for (int i = 0; i < size; i++) {
             saladService.deleteSalad(0);
         }
+
         assertTrue(saladService.isSaladsEmpty());
     }
 
     @Test
     void shouldNotDeleteSalad() {
         int sizeBeforeDelete = saladService.getAllSalads().size();
+
         assertThrows(IndexOutOfBoundsException.class, () -> saladService.deleteSalad(43));
         assertEquals(sizeBeforeDelete, saladService.getAllSalads().size());
     }

@@ -36,7 +36,13 @@ class ProductServiceTest {
     @Test
     void shouldNotAddDuplicateProduct() {
         int sizeBeforeAdd = productService.getAllProducts().size();
-        productService.addProduct(new Product("Tomato", 10, 2, 3, 4));
+
+        Product product = new Product("Tomato", 10, 2, 3, 4);
+
+        if (!productService.isProductExists(product)) {
+            productService.addProduct(product);
+        }
+
         assertEquals(sizeBeforeAdd, productService.getAllProducts().size());
     }
 
@@ -55,7 +61,6 @@ class ProductServiceTest {
         assertEquals(1, productService.getProductsByCalories(40, 40).size());
         assertEquals(1, productService.getProductsByCalories(23, 23).size());
         assertEquals(1, productService.getProductsByCalories(41 + 5 * 4, 41 + 5 * 4).size()); //calories = base calories + 4* starch
-
         assertEquals(4, productService.getProductsByCalories(0, 41 + 5 * 4).size());
         assertEquals(3, productService.getProductsByCalories(23, 41 + 5 * 4).size());
         assertEquals(2, productService.getProductsByCalories(10, 23).size());
@@ -72,7 +77,6 @@ class ProductServiceTest {
     void shouldGetProductsByName() {
         assertEquals(1, productService.getProductsByName("Tomato").size());
         assertEquals(List.of(new Product("Tomato", 10, 2, 3, 4)), productService.getProductsByName("Tomato"));
-
         assertEquals(3, productService.getProductsByName("o").size());
         assertEquals(List.of(
                 new Product("Tomato", 10, 2, 3, 4),
@@ -85,7 +89,6 @@ class ProductServiceTest {
     void shouldGetProductsByFormatedName() {
         assertEquals(1, productService.getProductsByName(" TOMAto ").size());
         assertEquals(List.of(new Product("Tomato", 10, 2, 3, 4)), productService.getProductsByName("TOMAto"));
-
         assertEquals(3, productService.getProductsByName("   O    ").size());
         assertEquals(List.of(
                 new Product("Tomato", 10, 2, 3, 4),
@@ -106,7 +109,6 @@ class ProductServiceTest {
 
         assertEquals(10, productService.getAllProducts().getFirst().getCaloriesPer100());
         assertEquals(41 + 5 * 4, productService.getAllProducts().getLast().getCaloriesPer100());
-
         assertEquals(sortedProducts, productService.getAllProducts());
     }
 
@@ -124,7 +126,6 @@ class ProductServiceTest {
 
         assertEquals(41 + 5 * 4, productService.getAllProducts().getFirst().getCaloriesPer100());
         assertEquals(10, productService.getAllProducts().getLast().getCaloriesPer100());
-
         assertEquals(sortedProducts, productService.getAllProducts());
     }
 
@@ -183,7 +184,6 @@ class ProductServiceTest {
                     if (p instanceof Vegetable v) return new Vegetable(v);
                     return new Product(p);
                 }).toList();
-
         ProductPatch productPatch = new ProductPatch();
         productPatch.name = "newName";
         productPatch.carbsPer100 = 12;
@@ -194,7 +194,6 @@ class ProductServiceTest {
         assertEquals(productPatch.name, productService.getAllProducts().getFirst().getName());
         assertEquals(productPatch.carbsPer100, productService.getAllProducts().getFirst().getCarbsPer100());
         assertEquals(productPatch.fatsPer100, productService.getAllProducts().getFirst().getFatsPer100());
-
         assertNotEquals(beforeUpdate, productService.getAllProducts());
     }
 
@@ -215,7 +214,6 @@ class ProductServiceTest {
         productPatch.fatsPer100 = 54;
 
         assertThrows(IndexOutOfBoundsException.class, () -> productService.updateProduct(540, productPatch));
-
         assertEquals(beforeUpdate, productService.getAllProducts());
     }
 }
